@@ -49,11 +49,4 @@ uv run scripts/publish.py
 Use `--upload-only` to create immutable revisions without changing the
 published revision pointer. You can also pass one or more `.dhsim` paths.
 
-## Provenance
-
-`policies.json` pins the simulator Space revision and the Microduck RL
-revision. `SHA256SUMS` records every LFS object's source digest. The standard
-Microduck embodiment import is maintained in
-[DollhouseRobotics/miniverse](https://github.com/DollhouseRobotics/miniverse).
-
 See [SPEC.md](SPEC.md) for the controller contract and bundle decisions.
