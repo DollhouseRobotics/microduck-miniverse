@@ -33,7 +33,9 @@ The ONNX graph emits 14 normalized joint offsets. The controller adds the
 published default pose and sends the result as position targets in the stable
 servo order recorded in `policy.py`.
 
-Walking and roller bundles expose forward speed and yaw rate. Sit/stand exposes
+Walking and roller bundles expose one self-centering two-axis joystick: the
+horizontal axis controls yaw rate and the vertical axis controls forward speed.
+Sit/stand exposes
 a boolean posture command. Ground-pick and roller-crouch turn a momentary
 trigger into the published cosine/sine phase command. Kick and roulade triggers
 run the policy for a bounded window, then hold the default pose. The get-up

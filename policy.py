@@ -76,8 +76,13 @@ class MicroduckPolicy:
     def command_block(self, step):
         command = np.zeros(13, dtype=np.float32)
         if self.mode in {"walking", "roller"}:
-            command[0] = scalar_command(step.commands, "forward-speed")
-            command[2] = scalar_command(step.commands, "yaw-rate")
+            joystick = np.asarray(step.commands.get("walking-control", (0.0, 0.0)), dtype=np.float32).reshape(-1)
+            if joystick.size != 2 or not np.isfinite(joystick).all():
+                raise ValueError("Microduck walking control must contain two finite values")
+            speed_range = (-0.5, 0.6) if self.mode == "roller" else (-0.2, 0.25)
+            yaw_range = (-0.3, 0.3) if self.mode == "roller" else (-1.0, 1.0)
+            command[0] = np.clip(joystick[1], speed_range[0], speed_range[1])
+            command[2] = np.clip(joystick[0], yaw_range[0], yaw_range[1])
         elif self.mode == "sitstand":
             command[0] = scalar_command(step.commands, "sit")
         elif self.mode in {"ground-pick", "roller-crouch"} and self.active_steps is not None:

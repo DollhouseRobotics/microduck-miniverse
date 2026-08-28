@@ -150,8 +150,7 @@ def command_manifest(policy):
         speed_range = [-0.5, 0.6] if mode == "roller" else [-0.2, 0.25]
         yaw_range = [-0.3, 0.3] if mode == "roller" else [-1.0, 1.0]
         return [
-            {"id": "forward-speed", "kind": "scalar", "label": "Forward speed", "unit": "m/s", "default": 0.0, "range": speed_range, "step": 0.05, "frame": "root", "sliceLength": 1, "update": "continuous"},
-            {"id": "yaw-rate", "kind": "scalar", "label": "Yaw rate", "unit": "rad/s", "default": 0.0, "range": yaw_range, "step": 0.05, "frame": "root", "sliceLength": 1, "update": "continuous"},
+            {"id": "walking-control", "kind": "joystick2d", "label": "Walking control", "unit": "normalized", "default": [0.0, 0.0], "range": [-1.0, 1.0], "step": 0.05, "deadzone": 0.0, "frame": "root", "sliceLength": 2, "update": "continuous", "axisRanges": [yaw_range, speed_range]},
         ]
     if mode == "sitstand":
         return [{"id": "sit", "kind": "boolean", "label": "Sit", "unit": "boolean", "default": False, "range": [0, 1], "step": 1, "frame": "task", "sliceLength": 1, "update": "continuous"}]
@@ -181,11 +180,17 @@ def manifest(policy):
         if key in policy:
             value["metadata"][key] = policy[key]
     if commands:
-        value["commands"] = commands
-        value["ui"] = {"components": [
-            {"id": command["id"] + "-control", "renderer": "builtin/" + command["kind"], "commandId": command["id"]}
-            for command in commands
-        ]}
+        value["commands"] = [{key: item for key, item in command.items() if key != "axisRanges"} for command in commands]
+        value["ui"] = {"components": [{
+            "id": command["id"] + "-control",
+            "renderer": "builtin/" + command["kind"],
+            "commandId": command["id"],
+            **({"options": {
+                "axisLabels": ["Turn", "Forward"],
+                "axisUnits": ["rad/s", "m/s"],
+                "axisRanges": command["axisRanges"],
+            }} if command["kind"] == "joystick2d" else {}),
+        } for command in commands]}
     return value
 
 
