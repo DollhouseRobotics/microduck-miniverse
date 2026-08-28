@@ -189,6 +189,7 @@ def manifest(policy):
                 "axisLabels": ["Turn", "Forward"],
                 "axisUnits": ["rad/s", "m/s"],
                 "axisRanges": command["axisRanges"],
+                "placement": "stage",
             }} if command["kind"] == "joystick2d" else {}),
         } for command in commands]}
     return value
