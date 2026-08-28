@@ -164,7 +164,7 @@ def manifest(policy):
     value = {
         "version": "v1", "id": policy["id"], "name": policy["name"],
         "description": policy["description"], "primarySimulator": "mujoco",
-        "embodiment": {"appearance": {"geometry": "auto", "color": "#f2a900"}},
+        "embodiment": {"appearance": {"geometry": "mjcf", "color": "#f2a900"}},
         "models": [{"id": "policy"}],
         "program": {"apiVersion": "dhr.python-policy/v1", "entrypoint": "policy:MicroduckPolicy"},
         "metadata": {
